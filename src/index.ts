@@ -46,10 +46,14 @@ class Index{
         });
         ////////// ws
         app.ws("/ws",(ws,req)=>{
-            setTimeout(function(){
-                ws.send("foo");
+            var cl=this.clients.add(ws);
+            if(cl==null){
+                //入らなかった
+                ws.send(JSON.stringify({
+                    error: "Server is full"
+                }));
                 ws.close();
-            },2000);
+            }
         });
     }
 }

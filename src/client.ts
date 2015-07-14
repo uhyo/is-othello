@@ -1,5 +1,5 @@
 ///<reference path="./node.d.ts" />
-//Othello clients
+//Othello clients that handle ws
 
 import config=require('config');
 
@@ -14,9 +14,9 @@ export class Manager{
     constructor(){
         this.clients=[];
     }
-    public add():Client{
+    public add(ws):Client{
         if(this.clients.length<config.get("connections.max")){
-            let result=new Client();
+            let result=new Client(ws);
             this.clients.push(result);
             return result;
         }
@@ -26,7 +26,7 @@ export class Manager{
 
 export class Client{
     private state:State;
-    constructor(){
+    constructor(private ws){
         this.state=State.INIT;
     }
 }
