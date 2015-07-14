@@ -7,7 +7,7 @@ var babelify=require('babelify');
 var globule=require('globule');
 var typescript=require('gulp-typescript');
 var del=require('del');
-var sass=require('gulp-ruby-sass');
+var sass=require('gulp-sass');
 
 gulp.task('tsc',function(){
     return gulp.src("src/**/*.ts")
@@ -31,10 +31,8 @@ gulp.task('jsx',function(){
     .pipe(gulp.dest("dist"));
 });
 gulp.task('sass',function(){
-    return sass("sass/")
-    .on("error",function(e){
-        console.error(e)
-    })
+    return gulp.src("sass/**/*.scss")
+    .pipe(sass().on("error",sass.logError))
     .pipe(gulp.dest("dist"));
 });
 
