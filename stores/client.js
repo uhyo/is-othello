@@ -9,7 +9,8 @@ var client=Reflux.createStore({
     },
     init:function(){
         this.state={
-            state: "REGISTERING"
+            state: "REGISTERING",
+            log: []
         };
     },
     getInitialState:function(){
@@ -17,9 +18,19 @@ var client=Reflux.createStore({
     },
     onMessage:function(obj){
         //serverからのメッセージ
+        console.log(obj);
         if(obj.command==="ack"){
             //時間
             this.state.time=obj.time;
+            this.trigger(this.state);
+        }else if(obj.command==="end"){
+            //終了した
+            this.state.log=this.state.log.concat({
+                wl: obj.wl,
+                mystones: obj.mystones,
+                opstones: obj.opstones,
+                reason: obj.reason
+            });
             this.trigger(this.state);
         }else if(obj.state==="WAITING"){
             this.state.state="WAITING";

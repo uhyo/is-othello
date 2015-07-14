@@ -7,7 +7,8 @@ var clientStore=require('../../stores/client');
 var boardStore=require('../../stores/board');
 
 var PlayInfo=require('./playinfo'),
-    Board=require('./board');
+    Board=require('./board'),
+    Log=require('./log');
 
 module.exports = React.createClass({
     displayName:"Client",
@@ -38,6 +39,7 @@ module.exports = React.createClass({
         return <div className="playing-app">
             <PlayInfo opponent={this.state.client.opponent} mycolor={this.state.board.mycolor} turn={this.state.board.turn} time={this.state.client.time} />
             {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={this.state.board.turn===this.state.board.mycolor} /> : null}
+            <Log log={this.state.client.log} />
         </div>;
     }
 });

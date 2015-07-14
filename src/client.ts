@@ -136,6 +136,14 @@ export class Client{
         }else if(command==="ACK"){
             obj.command="ack";
             obj.time=parseInt(tokens[1]);
+        }else if(command==="END"){
+            obj.command="end";
+            obj.wl=tokens[1];
+            obj.mystones=parseInt(tokens[2]);
+            obj.opstones=parseInt(tokens[3]);
+            obj.reason=tokens[4];
+        }else{
+            obj=null;
         }
         if(obj){
             this.addQueue(obj);
@@ -188,7 +196,7 @@ export class Client{
                         opponent: obj.opponent,
                         time: obj.time
                     });
-                }else if(obj.command==="move" || obj.command==="ack"){
+                }else if(obj.command==="move" || obj.command==="ack" || obj.command==="end"){
                     //MOVE/ACK command
                     this.wssend(obj);
                 }
