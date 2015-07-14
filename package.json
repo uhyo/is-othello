@@ -22,6 +22,7 @@
     "react": "^0.13.3",
     "reactify": "^1.1.1",
     "reflux": "^0.2.9",
+    "st": "^0.5.4",
     "typescript": "^1.5.0-beta",
     "vinyl-source-stream": "^1.1.0"
   }
