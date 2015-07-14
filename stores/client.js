@@ -20,6 +20,10 @@ var client=Reflux.createStore({
         if(obj.state==="WAITING"){
             this.state.state="WAITING";
             this.trigger(this.state);
+        }else if(obj.state==="PLAYING"){
+            //playingになった
+            this.state.state="PLAYING";
+            this.state.opponent=obj.opponent;
         }
     }
 });

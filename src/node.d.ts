@@ -27,3 +27,7 @@ declare module "express-ws"{
     var _m:any;
     export = _m;
 }
+declare module "byline"{
+    var _m:any;
+    export = _m;
+}
