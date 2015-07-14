@@ -5,7 +5,11 @@ table.playing-board {
     border: 2px solid #226622;
     background-color: #008F00;
     font-size: 28px;
+    cursor: default;
 
+    &.board-selected {
+      background-color: #B9C900;
+    }
     &.board-blank::after{
       content:"　";
     }

@@ -8,15 +8,15 @@ var board=Reflux.createStore({
         "message": message
     },
     init:function(){
-        this.state=this.getInitialState();
-    },
-    getInitialState:function(){
-        return {
+        this.state= {
             turn: null,
             mycolor: null,
             board: initBoard(),
             time: null
-        }
+        };
+    },
+    getInitialState:function(){
+        return this.state;
     },
     onMessage:function(obj){
         if(obj.state==="PLAYING"){

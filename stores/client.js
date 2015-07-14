@@ -8,12 +8,12 @@ var client=Reflux.createStore({
         "message": message
     },
     init:function(){
-        this.state=this.getInitialState();
-    },
-    getInitialState:function(){
-        return {
+        this.state={
             state: "REGISTERING"
         };
+    },
+    getInitialState:function(){
+        return this.state;
     },
     onMessage:function(obj){
         //serverからのメッセージ
