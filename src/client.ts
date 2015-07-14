@@ -133,6 +133,9 @@ export class Client{
         }else if(command==="MOVE"){
             obj.command="move";
             obj.position=tokens[1];
+        }else if(command==="ACK"){
+            obj.command="ack";
+            obj.time=parseInt(tokens[1]);
         }
         if(obj){
             this.addQueue(obj);
@@ -185,12 +188,9 @@ export class Client{
                         opponent: obj.opponent,
                         time: obj.time
                     });
-                }else if(obj.command==="move"){
-                    //MOVE command
-                    this.wssend({
-                        command: "move",
-                        position: obj.position
-                    });
+                }else if(obj.command==="move" || obj.command==="ack"){
+                    //MOVE/ACK command
+                    this.wssend(obj);
                 }
             }
         }

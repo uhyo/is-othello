@@ -12,7 +12,6 @@ var board=Reflux.createStore({
             turn: null,
             mycolor: null,
             board: null,
-            time: null
         };
     },
     getInitialState:function(){
@@ -33,7 +32,6 @@ var board=Reflux.createStore({
             //初期化した感じ
             this.state.turn="BLACK";
             this.state.mycolor=obj.wb;
-            this.state.time=obj.time;
             this.state.board=initBoard();
             this.trigger(this.state);
         }
