@@ -10,16 +10,19 @@ var connection=Reflux.createStore({
     getInitialState:function(){
         return {
             connected: false,
+            ws: null,
         };
     },
-    onEstablished:function(){
+    onEstablished:function(ws){
         this.trigger({
-            connected: true
+            connected: true,
+            ws: ws
         });
     },
     onUnestablished:function(){
         this.trigger({
-            connected: false
+            connected: false,
+            ws: null
         });
     },
 

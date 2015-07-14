@@ -1,6 +1,11 @@
 http:
   port: 8080
 
+othelloserver:
+  host: localhost
+  port: 3000
+
 connections:
   max: 100
+
 

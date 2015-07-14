@@ -14,7 +14,7 @@ connect.listen(function(params){
     var ws=new WebSocket(location.protocol.replace("http","ws")+"//"+location.host+p+"ws");
     ws.onopen=function(e){
         console.log("WebSocket connection is open");
-        connect.established();
+        connect.established(ws);
     };
     ws.onerror=function(e){
         console.error("WebSocket error",e);
@@ -25,6 +25,20 @@ connect.listen(function(params){
     };
     ws.onmessage=function(e){
         console.log("Message from server: ",e.data);
+        //ha
+        var obj;
+        try{
+            obj=JSON.parse(e.data);
+        }catch(e){
+            console.error("Failed to parse:",e.data);
+        }
+        if("function"===typeof ws.ondata){
+            ws.ondata(obj);
+        }
+    };
+    //hack send
+    ws.sendObj=function(obj){
+        ws.send(JSON.stringify(obj));
     };
 });
 

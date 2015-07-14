@@ -16,7 +16,11 @@ export class Manager{
     }
     public add(ws):Client{
         if(this.clients.length<config.get("connections.max")){
-            let result=new Client(ws);
+            let result=new Client(ws,(cl)=>{
+                this.clients=this.clients.filter((o)=>{
+                    return o!==cl
+                });
+            });
             this.clients.push(result);
             return result;
         }
@@ -26,7 +30,26 @@ export class Manager{
 
 export class Client{
     private state:State;
-    constructor(private ws){
+    constructor(private ws,private onend){
         this.state=State.INIT;
+        this.init(ws);
+    }
+    private init(ws):void{
+        //init ws
+        ws.on('message',(message)=>{
+            var obj;
+            try{
+                obj=JSON.parse(message);
+            }catch(e){
+                //は？？？？？
+                ws.close();
+                return;
+            }
+            console.log(obj);
+        });
+        ws.on('close',()=>{
+            //end
+            this.onend(this);
+        });
     }
 }

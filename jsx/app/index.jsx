@@ -4,6 +4,8 @@ var Reflux=require('reflux');
 var connect=require('../../actions/connect');
 var connectStore=require('../../stores/connect');
 
+var Client=require('./client.jsx');
+
 module.exports = React.createClass({
     displayName:"App",
     mixins:[Reflux.connect(connectStore,"connect")],
@@ -11,8 +13,9 @@ module.exports = React.createClass({
         connect();
     },
     render:function(){
-        return (<p>
-            {this.state.connect.connected ? "接続しました" : "接続してません"}
-        </p>);
+        if(!this.state.connect.connected){
+            return <p>サーバーに接続していません。</p>;
+        }
+        return <Client ws={this.state.connect.ws} />;
     }
 });
