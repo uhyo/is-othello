@@ -37,7 +37,7 @@ module.exports = React.createClass({
     playing:function(){
         return <div className="playing-app">
             <PlayInfo/>
-            <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={this.state.board.turn===this.state.board.mycolor} />
+            {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={this.state.board.turn===this.state.board.mycolor} /> : null}
         </div>;
     }
 });

@@ -11,7 +11,7 @@ var board=Reflux.createStore({
         this.state= {
             turn: null,
             mycolor: null,
-            board: initBoard(),
+            board: null,
             time: null
         };
     },
@@ -24,12 +24,17 @@ var board=Reflux.createStore({
             this.state.board=move(this.state.turn,getPosition(obj.position), this.state.board);
             //あれ
             this.state.turn=opposite(this.state.turn);
+            //置けるかどうかの判定
+            if(!isMovable(this.state.turn, this.state.board)){
+                this.state.turn=opposite(this.state.turn);
+            }
             this.trigger(this.state);
         }else if(obj.state==="PLAYING"){
             //初期化した感じ
             this.state.turn="BLACK";
             this.state.mycolor=obj.wb;
             this.state.time=obj.time;
+            this.state.board=initBoard();
             this.trigger(this.state);
         }
     }
@@ -73,8 +78,8 @@ function isOut(x,y){
 //破壊的
 function move(turn,{x,y},board){
     var o=opposite(turn);
-    //中心に石を置く
-    board[y][x]=turn;
+    //とった石カウント
+    var count=0;
     //8方向にアレする
     var directions=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
     for(var i=0;i<8;i++){
@@ -102,11 +107,59 @@ function move(turn,{x,y},board){
                 //裏返す
                 if(board[cy][cx]===o){
                     board[cy][cx]=turn;
+                    count++;
                 }else{
                     break;
                 }
             }
         }
     }
+    if(count===0){
+        //何もとれない。違法手
+        return board;
+    }
+    //中心に石を置く
+    board[y][x]=turn;
     return board;
+}
+
+//判定
+function isMovable(turn,board){
+    //turnさんがboardに置く所があるか判定
+    var directions=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+    var o=opposite(turn);
+    var state;
+    for(var x=0;x<8;x++){
+        for(var y=0;y<8;y++){
+            if(board[y][x]!==""){
+                //おけない
+                continue;
+            }
+            //ここに置けるか判定
+            for(var k=0;k<8;k++){
+                var [dx,dy]=directions[k];
+                var cx=x, cy=y;
+                //おいたらこの方向でとれるか判定
+                var f2=false;
+                while(1){
+                    cx+=dx, cy+=dy;
+                    if(isOut(cx,cy)){
+                        //むりだった
+                        break;
+                    }
+                    if(board[cy][cx]===turn && f2===true){
+                        //OK
+                        return true;
+                    }else if(board[cy][cx]===o){
+                        //いけそう
+                        f2=true;
+                    }else{
+                        //むりだった
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return false;
 }
