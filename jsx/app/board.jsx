@@ -11,18 +11,18 @@ module.exports = React.createClass({
         var board=this.state.board;
         return <table className="playing-board">
             <tbody>
-                {board.board.map(function(row){
-                    return <tr>
-                        {row.map(function(cell){
+                {board.board.map(function(row,i){
+                    return <tr key={i}>
+                        {row.map(function(cell,j){
                             if(cell===""){
-                                return <td className="board-blank"/>;
+                                return <td key={j} className="board-blank"/>;
                             }else if(cell==="BLACK"){
-                                return <td className="board-black">●</td>;
+                                return <td key={j} className="board-black">●</td>;
                             }else if(cell==="WHITE"){
-                                return <td classname="board-white">●</td>;
+                                return <td key={j} className="board-white">●</td>;
                             }else{
                                 //???
-                                return <td>{cell}</td>;
+                                return <td key={j}>{cell}</td>;
                             }
                         })}
                     </tr>;

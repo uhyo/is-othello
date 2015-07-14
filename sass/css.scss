@@ -1,0 +1,19 @@
+table.playing-board {
+  border-collapse: collapse;
+
+  td {
+    border: 2px solid #226622;
+    background-color: #008F00;
+    font-size: 28px;
+
+    &.board-blank::after{
+      content:"　";
+    }
+    &.board-black{
+      color: black;
+    }
+    &.board-white{
+      color: white;
+    }
+  }
+}

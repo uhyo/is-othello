@@ -7,6 +7,7 @@ var babelify=require('babelify');
 var globule=require('globule');
 var typescript=require('gulp-typescript');
 var del=require('del');
+var sass=require('gulp-ruby-sass');
 
 gulp.task('tsc',function(){
     return gulp.src("src/**/*.ts")
@@ -29,16 +30,23 @@ gulp.task('jsx',function(){
     .pipe(source("components.js"))
     .pipe(gulp.dest("dist"));
 });
+gulp.task('sass',function(){
+    return sass("sass/")
+    .on("error",function(e){
+        console.error(e)
+    })
+    .pipe(gulp.dest("dist"));
+});
 
 gulp.task('clean',function(cb){
     del([
         //tsc
         "js",
         "src/**/*.js",
-        //jsx
+        //jsx,sass
         "dist",
     ],cb);
 });
 
 
-gulp.task('default',['jsx','tsc']);
+gulp.task('default',['jsx','tsc','sass']);
