@@ -1,4 +1,8 @@
 declare var __dirname:string;
+declare module "net"{
+    var _m:any;
+    export = _m;
+}
 declare module "path"{
     var _m:any;
     export = _m;

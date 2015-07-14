@@ -1,7 +1,12 @@
 var Reflux=require('reflux');
 
+var message=require('../actions/message');
+
 //client store
 var client=Reflux.createStore({
+    listenables:{
+        "message": message
+    },
     init:function(){
         this.state=this.getInitialState();
     },
@@ -10,6 +15,13 @@ var client=Reflux.createStore({
             state: "REGISTERING"
         };
     },
+    onMessage:function(obj){
+        //serverからのメッセージ
+        if(obj.state==="WAITING"){
+            this.state.state="WAITING";
+            this.trigger(this.state);
+        }
+    }
 });
 
 client.init();

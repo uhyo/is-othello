@@ -1,5 +1,8 @@
 var Reflux=require('reflux');
 
+//server-message handling
+var message=require('./message');
+
 //connect to server.
 var connect= Reflux.createAction({
     children: ["established","unestablished"]
@@ -39,6 +42,11 @@ connect.listen(function(params){
     //hack send
     ws.sendObj=function(obj){
         ws.send(JSON.stringify(obj));
+    };
+
+    ws.ondata=function(obj){
+        //ws
+        message(obj);
     };
 });
 

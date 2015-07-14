@@ -16,11 +16,17 @@ module.exports = React.createClass({
     render:function(){
         if(this.state.client.state==="REGISTERING"){
             return this.registering();
+        }else if(this.state.client.state==="WAITING"){
+            //対戦待ち
+            return this.waiting();
         }
     },
     registering:function(){
         ///おなまえ　にゅうりょく
         return <InputName onOk={this.handleName} />;
+    },
+    waiting:function(){
+        return <p>対戦相手が見つかるのを待っています。</p>;
     }
 });
 
