@@ -5,16 +5,23 @@ import config=require('config');
 
 import st=require('st');
 import ect=require('ect');
+import expressWs=require('express-ws');
+
+import client=require('./client');
 
 export = Index;
 class Index{
     private app:any;
+    private clients:client.Manager;
     constructor(){
     }
     public start():void{
+        this.clients=new client.Manager;
         this.app=express();
+        expressWs(this.app);
         this.initRoute(this.app);
         this.app.listen(config.get("http.port"));
+
     }
 
     private initRoute(app):void{
@@ -33,8 +40,16 @@ class Index{
             url: "/static",
             index: false
         }));
+        ////////// top page
         app.get("/",(req,res)=>{
             res.render("index");
+        });
+        ////////// ws
+        app.ws("/ws",(ws,req)=>{
+            setTimeout(function(){
+                ws.send("foo");
+                ws.close();
+            },2000);
         });
     }
 }

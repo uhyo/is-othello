@@ -15,6 +15,7 @@
     "del": "^1.2.0",
     "ect": "^0.5.9",
     "express": "^4.13.1",
+    "express-ws": "^0.2.6",
     "globule": "^0.2.0",
     "gulp": "^3.9.0",
     "gulp-typescript": "^2.7.8",

@@ -1,2 +1,6 @@
 http:
   port: 8080
+
+connections:
+  max: 20
+
