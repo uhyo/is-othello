@@ -30,6 +30,17 @@ module.exports = React.createClass({
             select: null
         });
     },
+    handleClick:function(e){
+        var t=e.target, x=parseInt(t.dataset.posx), y=parseInt(t.dataset.posy);
+        if(isFinite(x) && isFinite(y)){
+            //click event
+            if(this.state.board.board[y][x]!==""){
+                //救済
+                return;
+            }
+            console.log(x,y);
+        }
+    },
     render:function(){
         var board=this.state.board;
         var select = this.state.select || {x:-1, y:-1};
@@ -44,13 +55,21 @@ module.exports = React.createClass({
                                 "board-black": cell==="BLACK",
                                 "board-white": cell==="WHITE"
                             });
+                            var props={
+                                key: y,
+                                className: cx,
+                                "data-posx":x,
+                                "data-posy":y,
+                                onMouseEnter:this.handleMouseEnter,
+                                onClick:this.handleClick
+                            };
                             if(cell===""){
-                                return <td key={y} className={cx} data-posx={x} data-posy={y} onMouseEnter={this.handleMouseEnter} />;
+                                return <td {...props} />;
                             }else if(cell==="BLACK" || cell==="WHITE"){
-                                return <td key={y} className={cx} data-posx={x} data-posy={y} onMouseEnter={this.handleMouseEnter}>●</td>;
+                                return <td {...props}>●</td>;
                             }else{
                                 //???
-                                return <td key={j} classname={cx} data-posx={x} data-posy={y} onMouseEnter={this.handleMouseEnter}>{cell}</td>;
+                                return <td {...props}>{cell}</td>;
                             }
                         })}
                     </tr>;
