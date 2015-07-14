@@ -123,12 +123,16 @@ export class Client{
         var obj:any={
             from:"server"
         };
-        if(tokens[0]==="START"){
+        var command=tokens[0];
+        if(command==="START"){
             //startだ
             obj.command="start";
             obj.wb=tokens[1];
             obj.opponent=tokens[2];
             obj.time=parseInt(tokens[3]);
+        }else if(command==="MOVE"){
+            obj.command="move";
+            obj.position=tokens[1];
         }
         if(obj){
             this.addQueue(obj);
@@ -157,12 +161,19 @@ export class Client{
                         continue;
                     }
                     let name=obj.name.replace(/\s/,"");
-                    this.write("OPEN "+name+"\n");
+                    this.write("OPEN "+name);
                     //状態移行
                     this.state=State.WAITING;
                     this.wssend({
                         state: "WAITING"
                     });
+                }else if(obj.command==="move"){
+                    //MOVE command
+                    if("string"!==typeof obj.position){
+                        continue;
+                    }
+                    let position=obj.position.replace(/\s/,"");
+                    this.write("MOVE "+position);
                 }
             }else if(obj.from==="server"){
                 if(obj.command==="start"){
@@ -173,6 +184,12 @@ export class Client{
                         wb: obj.wb,
                         opponent: obj.opponent,
                         time: obj.time
+                    });
+                }else if(obj.command==="move"){
+                    //MOVE command
+                    this.wssend({
+                        command: "move",
+                        position: obj.position
                     });
                 }
             }

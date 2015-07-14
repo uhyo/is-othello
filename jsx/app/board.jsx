@@ -2,12 +2,11 @@ var React=require('react');
 var Reflux=require('reflux');
 var classnames=require('classnames');
 
-var clientStore=require('../../stores/client'),
-    boardStore =require('../../stores/board');
+var clientActions=require('../../actions/client');
 
 module.exports = React.createClass({
     displayName:"Board",
-    mixins:[Reflux.connect(boardStore,"board")],
+    mixins:[],
     getInitialState:function(){
         return {
             select:null,
@@ -34,21 +33,21 @@ module.exports = React.createClass({
         var t=e.target, x=parseInt(t.dataset.posx), y=parseInt(t.dataset.posy);
         if(isFinite(x) && isFinite(y)){
             //click event
-            if(this.state.board.board[y][x]!==""){
+            if(this.props.board[y][x]!==""){
                 //救済
                 return;
             }
-            console.log(x,y);
+            clientActions.move(this.props.ws,{x,y});
         }
     },
     render:function(){
-        var board=this.state.board;
+        var board=this.props.board;
         var select = this.state.select || {x:-1, y:-1};
         return <table className="playing-board" onMouseLeave={this.handleMouseLeave}>
             <tbody>
-                {board.board.map((row,x)=>{
-                    return <tr key={x}>
-                        {row.map((cell,y)=>{
+                {board.map((row,y)=>{
+                    return <tr key={y}>
+                        {row.map((cell,x)=>{
                             var cx=classnames({
                                 "board-selected": select.x===x && select.y===y,
                                 "board-blank": cell==="",
@@ -56,12 +55,12 @@ module.exports = React.createClass({
                                 "board-white": cell==="WHITE"
                             });
                             var props={
-                                key: y,
+                                key: x,
                                 className: cx,
                                 "data-posx":x,
                                 "data-posy":y,
                                 onMouseEnter:this.handleMouseEnter,
-                                onClick:this.handleClick
+                                onClick:this.props.turnPlayer===true ? this.handleClick : null
                             };
                             if(cell===""){
                                 return <td {...props} />;

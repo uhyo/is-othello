@@ -4,13 +4,14 @@ var Reflux=require('reflux');
 var clientActions=require('../../actions/client');
 var connectStore=require('../../stores/connect');
 var clientStore=require('../../stores/client');
+var boardStore=require('../../stores/board');
 
 var PlayInfo=require('./playinfo'),
     Board=require('./board');
 
 module.exports = React.createClass({
     displayName:"Client",
-    mixins:[Reflux.connect(connectStore,"connect"),Reflux.connect(clientStore,"client")],
+    mixins:[Reflux.connect(connectStore,"connect"),Reflux.connect(clientStore,"client"),Reflux.connect(boardStore,"board")],
     //
     handleName:function(name){
         //おなまえを入力してもらった
@@ -36,7 +37,7 @@ module.exports = React.createClass({
     playing:function(){
         return <div className="playing-app">
             <PlayInfo/>
-            <Board/>
+            <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={this.state.board.turn===this.state.board.mycolor} />
         </div>;
     }
 });
