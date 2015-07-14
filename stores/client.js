@@ -24,6 +24,7 @@ var client=Reflux.createStore({
             //playingになった
             this.state.state="PLAYING";
             this.state.opponent=obj.opponent;
+            this.trigger(this.state);
         }
     }
 });

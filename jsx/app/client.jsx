@@ -5,6 +5,9 @@ var clientActions=require('../../actions/client');
 var connectStore=require('../../stores/connect');
 var clientStore=require('../../stores/client');
 
+var PlayInfo=require('./playinfo'),
+    Board=require('./board');
+
 module.exports = React.createClass({
     displayName:"Client",
     mixins:[Reflux.connect(connectStore,"connect"),Reflux.connect(clientStore,"client")],
@@ -19,6 +22,8 @@ module.exports = React.createClass({
         }else if(this.state.client.state==="WAITING"){
             //対戦待ち
             return this.waiting();
+        }else if(this.state.client.state==="PLAYING"){
+            return this.playing();
         }
     },
     registering:function(){
@@ -27,6 +32,12 @@ module.exports = React.createClass({
     },
     waiting:function(){
         return <p>対戦相手が見つかるのを待っています。</p>;
+    },
+    playing:function(){
+        return <div className="playing-app">
+            <PlayInfo/>
+            <Board/>
+        </div>;
     }
 });
 
