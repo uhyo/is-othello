@@ -75,18 +75,26 @@ var client=Reflux.createStore({
             this.trigger(this.state);
         }else if(obj.state==="END"){
             //おわり
-            this.state.log=this.state.log.concat({
-                type: "text",
-                value: "結果"
-            }).concat(obj.result.map((obj)=>{
-                return {
-                    type: "player",
-                    name: obj.name,
-                    score: obj.score,
-                    win: obj.win,
-                    lose: obj.lose
-                };
-            }));
+            if(obj.error===true){
+                //異常終了だ
+                this.state.log=this.state.log.concat({
+                    type: "text",
+                    value: "対戦相手がどこかに行ったか、審判サーバーが異常終了したため終了しました。"
+                });
+            }else{
+                this.state.log=this.state.log.concat({
+                    type: "text",
+                    value: "結果"
+                }).concat(obj.result.map((obj)=>{
+                    return {
+                        type: "player",
+                        name: obj.name,
+                        score: obj.score,
+                        win: obj.win,
+                        lose: obj.lose
+                    };
+                }));
+            }
             this.trigger(this.state);
         }
     }

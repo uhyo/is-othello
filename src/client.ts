@@ -57,7 +57,7 @@ export class Client{
             this.read.on("readable",()=>{
                 var line;
                 while(null != (line = this.read.read())){
-                    console.log("line: ",line);
+                    console.log("line: ",JSON.stringify(line));
                     this.processSrvCmd(line);
                 }
                 this.processQueue();
@@ -75,6 +75,13 @@ export class Client{
             //サーバーとの接続がおわった
             this.connect.unref();
             this.connect=null;
+            if(this.state!==State.END){
+                this.addQueue({
+                    from: "server",
+                    command: "bye",
+                    error: true
+                });
+            }
             this.addQueue({
                 from: "server",
                 command: "close"
@@ -104,6 +111,10 @@ export class Client{
         });
         ws.on('close',()=>{
             //end
+            //close accompanying connection
+            if(this.connect){
+                this.connect.end();
+            }
             this.end();
         });
     }
@@ -154,13 +165,18 @@ export class Client{
             obj.command="bye";
             obj.result=[];
             //アレする
-            for(var i=1,l=tokens.length;i<l;i+=4){
-                obj.result.push({
-                    name: tokens[i],
-                    score: parseInt(tokens[i+1]),
-                    win: parseInt(tokens[i+2]),
-                    lose: parseInt(tokens[i+3])
-                });
+            if(line.trim()==="BYE"){
+                //異常終了だ
+                obj.error=true;
+            }else{
+                for(var i=1,l=tokens.length;i<l;i+=4){
+                    obj.result.push({
+                        name: tokens[i],
+                        score: parseInt(tokens[i+1]),
+                        win: parseInt(tokens[i+2]),
+                        lose: parseInt(tokens[i+3])
+                    });
+                }
             }
         }else{
             obj=null;
@@ -224,6 +240,7 @@ export class Client{
                     this.state=State.END;
                     this.wssend({
                         state: "END",
+                        error: obj.error,
                         result: obj.result
                     });
                 }else if(obj.command==="close"){
