@@ -2,20 +2,21 @@ var React=require('react');
 var Reflux=require('reflux');
 
 var connect=require('../../actions/connect');
-var connectStore=require('../../stores/connect');
+var clientStore=require('../../stores/client');
 
 var Client=require('./client.jsx');
 
 module.exports = React.createClass({
     displayName:"App",
-    mixins:[Reflux.connect(connectStore,"connect")],
+    mixins:[Reflux.connect(clientStore,"client")],
     componentDidMount:function(){
         connect();
     },
     render:function(){
-        if(!this.state.connect.connected){
-            return <p>サーバーに接続していません。</p>;
-        }
-        return <Client ws={this.state.connect.ws} />;
+        var connected=this.state.client.connected;
+        return <div>
+            <Client ws={this.state.client.ws} connected={connected}/>
+            {!connected ? <p>サーバーと接続されていません。</p> : null}
+        </div>
     }
 });

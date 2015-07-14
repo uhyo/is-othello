@@ -2,7 +2,6 @@ var React=require('react/addons');
 var Reflux=require('reflux');
 
 var clientActions=require('../../actions/client');
-var connectStore=require('../../stores/connect');
 var clientStore=require('../../stores/client');
 var boardStore=require('../../stores/board');
 
@@ -12,21 +11,32 @@ var PlayInfo=require('./playinfo'),
 
 module.exports = React.createClass({
     displayName:"Client",
-    mixins:[Reflux.connect(connectStore,"connect"),Reflux.connect(clientStore,"client"),Reflux.connect(boardStore,"board")],
+    mixins:[Reflux.connect(clientStore,"client"),Reflux.connect(boardStore,"board")],
     //
+    propTypes:{
+        ws:React.PropTypes.object,
+        connected:React.PropTypes.bool
+    },
     handleName:function(name){
         //おなまえを入力してもらった
         clientActions.open({ws:this.props.ws, name});
     },
     render:function(){
-        if(this.state.client.state==="REGISTERING"){
+        if(this.state.client.state==="INIT"){
+            return this.initPage();
+        }else if(this.state.client.state==="REGISTERING"){
             return this.registering();
         }else if(this.state.client.state==="WAITING"){
             //対戦待ち
             return this.waiting();
         }else if(this.state.client.state==="PLAYING"){
             return this.playing();
+        }else if(this.state.client.state==="CLOSED"){
+            return this.closed();
         }
+    },
+    initPage:function(){
+        return null;
     },
     registering:function(){
         ///おなまえ　にゅうりょく
@@ -41,7 +51,13 @@ module.exports = React.createClass({
             {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={this.state.board.turn===this.state.board.mycolor} /> : null}
             <Log log={this.state.client.log} />
         </div>;
-    }
+    },
+    closed:function(){
+        return <div className="playing-app">
+            <p>終了しました。再度オセロをするにはページを更新してください。</p>
+            <Log log={this.state.client.log} />
+        </div>;
+    },
 });
 
 var InputName=React.createClass({

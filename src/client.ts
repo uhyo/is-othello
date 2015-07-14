@@ -9,6 +9,7 @@ const enum State{
     INIT = 0,
     WAITING,
     PLAYING,
+    END
 }
 
 export class Manager{
@@ -71,8 +72,14 @@ export class Client{
         });
         this.connect.on("close",(err)=>{
             //connection end
-            this.ws.close();
-            this.end();
+            //サーバーとの接続がおわった
+            this.connect.unref();
+            this.connect=null;
+            this.addQueue({
+                from: "server",
+                command: "close"
+            });
+            this.processQueue();
         });
         /*this.ready=true;
         this.processQueue();*/
@@ -109,6 +116,7 @@ export class Client{
     }
     //write to ws client
     private wssend(obj):void{
+        console.log("send",obj);
         this.ws.send(JSON.stringify(obj));
     }
     //write to othello server
@@ -142,6 +150,18 @@ export class Client{
             obj.mystones=parseInt(tokens[2]);
             obj.opstones=parseInt(tokens[3]);
             obj.reason=tokens[4];
+        }else if(command==="BYE"){
+            obj.command="bye";
+            obj.result=[];
+            //アレする
+            for(var i=1,l=tokens.length;i<l;i+=4){
+                obj.result.push({
+                    name: tokens[i],
+                    score: parseInt(tokens[i+1]),
+                    win: parseInt(tokens[i+2]),
+                    lose: parseInt(tokens[i+3])
+                });
+            }
         }else{
             obj=null;
         }
@@ -199,7 +219,20 @@ export class Client{
                 }else if(obj.command==="move" || obj.command==="ack" || obj.command==="end"){
                     //MOVE/ACK command
                     this.wssend(obj);
+                }else if(obj.command==="bye"){
+                    //bye command
+                    this.state=State.END;
+                    this.wssend({
+                        state: "END",
+                        result: obj.result
+                    });
+                }else if(obj.command==="close"){
+                    this.wssend(obj);
+                    //おわり
+                    this.ws.close();
+                    this.end();
                 }
+
             }
         }
         this.commandQueue=[];
