@@ -3,10 +3,10 @@
 FL演習のオセロのあれの人間用インターフェースです。Node.jsのサーバーがあなたの代わりに審判サーバーと通信してくれます。
 
 ## インストール方法
-* `git clone https://github.com/uhyo/is-othello`で手元にコードをコピーします。
-* [node.jsをインストール](http://nodejs.org/)します（`apt-get install node`でも入ります）。
-* `is-othello`ディレクトリに入り`npm install`します（必要なモジュールがローカルにインストールされます）。
-* `npm run build`
+1. `git clone https://github.com/uhyo/is-othello.git`で手元にコードをコピーします。
+2. [node.jsをインストール](http://nodejs.org/)します（`apt-get install nodejs`でも入りますが、なぜか`node`ではなく`nodejs`の名前で入るので自分でシンボリックリンクを貼る必要があります）。
+3. `is-othello`ディレクトリに入り`npm install`します（必要なモジュールがローカルにインストールされます）。
+4. `npm run build`を実行します。
 
 ## 使い方
 `npm start`でインターフェースサーバーを起動します。
