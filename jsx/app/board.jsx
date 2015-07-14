@@ -12,6 +12,12 @@ module.exports = React.createClass({
             select:null,
         };
     },
+    componentWillUpdate:function(nextProps,nextState){
+        if(nextProps.turnPlayer && nextProps.unmovable){
+            //自分のターンだが動けないのでパスを発行する
+            clientActions.pass(nextProps.ws);
+        }
+    },
     handleMouseEnter:function(e){
         var t=e.target, x=parseInt(t.dataset.posx), y=parseInt(t.dataset.posy);
         if(isFinite(x) && isFinite(y)){

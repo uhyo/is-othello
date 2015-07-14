@@ -34,3 +34,19 @@ move.listen(function(ws,{x,y}){
 });
 
 exports.move=move;
+
+//pass
+var pass=Reflux.createAction();
+pass.listen(function(ws){
+    ws.sendObj({
+        command:"move",
+        position: "PASS"
+    });
+    //自分用に流す
+    message({
+        command: "move",
+        position: "PASS"
+    });
+});
+
+exports.pass=pass;

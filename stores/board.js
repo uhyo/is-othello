@@ -1,6 +1,7 @@
 var Reflux=require('reflux');
 
-var message=require('../actions/message');
+var message=require('../actions/message'),
+    client=require('../actions/client');
 
 //board info
 var board=Reflux.createStore({
@@ -12,6 +13,7 @@ var board=Reflux.createStore({
             turn: null,
             mycolor: null,
             board: null,
+            unmovable: null,
         };
     },
     getInitialState:function(){
@@ -20,12 +22,17 @@ var board=Reflux.createStore({
     onMessage:function(obj){
         if(obj.command==="move"){
             //着手
-            this.state.board=move(this.state.turn,getPosition(obj.position), this.state.board);
+            if(obj.position!=="PASS"){
+                //パスのときもある
+                this.state.board=move(this.state.turn,getPosition(obj.position), this.state.board);
+            }
             //あれ
             this.state.turn=opposite(this.state.turn);
             //置けるかどうかの判定
+            this.state.unmovable=false;
             if(!isMovable(this.state.turn, this.state.board)){
-                this.state.turn=opposite(this.state.turn);
+                //自分がおけない（パスしないと）
+                this.state.unmovable=true;
             }
             this.trigger(this.state);
         }else if(obj.state==="PLAYING"){
@@ -33,6 +40,7 @@ var board=Reflux.createStore({
             this.state.turn="BLACK";
             this.state.mycolor=obj.wb;
             this.state.board=initBoard();
+            this.state.unmovable=false;
             this.trigger(this.state);
         }
     }

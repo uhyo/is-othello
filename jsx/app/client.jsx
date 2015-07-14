@@ -48,7 +48,7 @@ module.exports = React.createClass({
     playing:function(){
         return <div className="playing-app">
             <PlayInfo opponent={this.state.client.opponent} mycolor={this.state.board.mycolor} turn={this.state.board.turn} time={this.state.client.time} />
-            {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={this.state.board.turn===this.state.board.mycolor} /> : null}
+            {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={this.state.board.turn===this.state.board.mycolor} unmovable={this.state.board.unmovable}/> : null}
             <Log log={this.state.client.log} />
         </div>;
     },
