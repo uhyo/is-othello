@@ -8,19 +8,28 @@ import ect=require('ect');
 import expressWs=require('express-ws');
 
 import client=require('./client');
+import server=require('./server');
 
 export = Index;
 class Index{
     private app:any;
     private clients:client.Manager;
+    private front:server.Front;
     constructor(){
     }
     public start():void{
+        //クライアント側
         this.clients=new client.Manager;
         this.app=express();
         expressWs(this.app);
         this.initRoute(this.app);
         this.app.listen(config.get("http.port"));
+
+        //サーバー側
+        if(config.get("othelloserver.enabled")===true){
+            //サーバーも用意する
+            this.front=new server.Front();
+        }
 
     }
 

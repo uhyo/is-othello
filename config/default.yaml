@@ -2,6 +2,7 @@ http:
   port: 8080
 
 othelloserver:
+  enabled: true
   host: localhost
   port: 3000
 
@@ -9,3 +10,14 @@ connections:
   max: 100
 
 
+client:
+  name:
+    max: 64
+
+game:
+  # 待ち時間
+  time: 60000
+  # 秒読み時間
+  byoyomi: 500
+  # 1組につき何試合やるか
+  count: 2
