@@ -128,7 +128,13 @@ class Game extends events.EventEmitter{
         this.playing=true;
         this.turn="BLACK";
         this.pass_count=0;
-        //
+        //時間切れ検知
+        this.current_t.setCallback(()=>{
+            this.timeup();
+        });
+        this.opposite_t.setCallback(()=>{
+            this.timeup();
+        });
         //コマンド
         this.current_t.start();
         this.current.send("START BLACK "+this.opposite.name+" "+time);
@@ -172,6 +178,11 @@ class Game extends events.EventEmitter{
                 //OK!!!!!!!
                 //ackする
                 var tim=this.current_t.stop();
+                var byo=config.get("game.byoyomi");
+                //もう時間が足りないようなら補充する
+                if(tim<byo){
+                    this.current_t.set(tim=byo);
+                }
                 client.send(`ACK ${tim}`);
                 //相手に知らせる
                 this.opposite.send(`MOVE ${position}`);
@@ -241,7 +252,15 @@ class Game extends events.EventEmitter{
         this.current.send(`END ${cu} ${n} ${m} ${reason}`);
         this.opposite.send(`END ${op} ${m} ${n} ${reason}`);
 
+        this.current_t.stop();
+        this.opposite_t.stop();
+
         this.emit("end");
+    }
+    //タイムアップ
+    private timeup():void{
+        //即終了
+        this.end(this.opposite, "TIMEUP");
     }
 }
 
@@ -250,17 +269,47 @@ class Timer{
     private counting:boolean;
     private count:number;
     private c:number;
+    private callback:Function;
+    private timer:any;
     constructor(){
         this.counting=false;
     }
     set(count:number){
         this.count=count;
     }
+    setCallback(callback:Function){
+        this.callback=callback;
+        if(this.counting){
+            this.start();
+        }
+    }
     start():void{
         this.counting=true;
         this.c=Date.now();
+        if(this.timer!=null){
+            clearTimeout(this.timer);
+        }
+        var h=()=>{
+            var now=Date.now();
+            var sa=now-this.c;
+            this.timer=null;
+            if(sa>=this.count){
+                //超過した
+                if(this.callback!=null){
+                    this.callback();
+                }
+            }else{
+                let current=this.count-sa;
+                this.timer=setTimeout(h,Math.min(current,10000));
+            }
+            var w=Math.min(this.count,10000);
+        };
+        h();
     }
     stop():number{
+        if(this.timer!=null){
+            clearTimeout(this.timer);
+        }
         if(this.counting===false){
             return this.count;
         }
@@ -273,6 +322,15 @@ class Timer{
         }
         this.count=current;
         return current;
+    }
+    get():number{
+        if(this.counting===false){
+            return this.count;
+        }else{
+            var now=Date.now();
+            var sa=now-this.c;
+            return this.count-sa;
+        }
     }
 }
 

@@ -15,7 +15,7 @@ client:
     max: 64
 
 game:
-  # 待ち時間
+  # 待ち時間(ms)
   time: 600000
   # 秒読み時間
   byoyomi: 500
