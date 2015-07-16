@@ -29,10 +29,20 @@ class Server{
         c.once("ready",handler);
     }
     private newSession():void{
+        var cls=this.clients.slice(0,2);
         var sess=new Session(this.clients[0], this.clients[1]);
         this.clients=this.clients.slice(2);
         this.sessions.push(sess);
         sess.once("end",()=>{
+            //とりあえず1セッションおわったらクライアントとおさらばする
+            var stat=cls.map((c)=>{
+                return c.getScoreString()
+            }).join(" ");
+            cls.forEach((c)=>{
+                c.send(`BYE ${stat}`);
+                c.kill();
+            });
+
             this.sessions=this.sessions.filter((obj)=>{
                 return obj!==sess;
             });
@@ -219,6 +229,15 @@ class Game extends events.EventEmitter{
             op= winner===this.current ? "LOSE" : "WIN";
         }
 
+        //スコア
+        if(cu==="WIN"){
+            this.current.score(true);
+            this.opposite.score(false);
+        }else if(cu==="LOSE"){
+            this.current.score(false);
+            this.opposite.score(true);
+        }
+
         this.current.send(`END ${cu} ${n} ${m} ${reason}`);
         this.opposite.send(`END ${op} ${m} ${n} ${reason}`);
 
@@ -262,8 +281,13 @@ class Timer{
 class Client extends events.EventEmitter{
     public name:string;
     public alive:boolean;
+    //スコア
+    private win:number;
+    private lose:number;
     constructor(){
         super();
+        this.win=0;
+        this.lose=0;
     }
     protected processLine(line:string):void{
         var tokens=line.trim().split(/\s/);
@@ -283,6 +307,27 @@ class Client extends events.EventEmitter{
         }
     }
     send(command:string):void{
+        /* ABSTRACT METHOD */
+    }
+    //スコアをセット
+    score(win:boolean):void{
+        if(win){
+            this.win++;
+        }else{
+            this.lose++;
+        }
+    }
+    //スコアを得る
+    getScoreString():string{
+        return `${this.name} ${this.win-this.lose} ${this.win} ${this.lose}`;
+    }
+    //終わりにしてもらう
+    kill():void{
+        this._kill();
+        this.alive=false;
+        this.emit("close");
+    }
+    protected _kill():void{
         /* ABSTRACT METHOD */
     }
 }
@@ -315,6 +360,9 @@ export class TCPClient extends Client{
         if(this.alive){
             this.socket.write(command.trim()+"\n");
         }
+    }
+    protected _kill():void{
+        this.socket.end();
     }
 }
 
