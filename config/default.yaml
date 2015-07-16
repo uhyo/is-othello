@@ -16,8 +16,8 @@ client:
 
 game:
   # 待ち時間
-  time: 60000
+  time: 600000
   # 秒読み時間
   byoyomi: 500
   # 1組につき何試合やるか
-  count: 2
+  count: 1

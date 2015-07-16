@@ -18,18 +18,20 @@ class Index{
     constructor(){
     }
     public start():void{
-        //クライアント側
-        this.clients=new client.Manager;
-        this.app=express();
-        expressWs(this.app);
-        this.initRoute(this.app);
-        this.app.listen(config.get("http.port"));
-
         //サーバー側
         if(config.get("othelloserver.enabled")===true){
             //サーバーも用意する
             this.front=new server.Front();
+        }else{
+            this.front=null;
         }
+
+        //クライアント側
+        this.clients=new client.Manager();
+        this.app=express();
+        expressWs(this.app);
+        this.initRoute(this.app);
+        this.app.listen(config.get("http.port"));
 
     }
 
