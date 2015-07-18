@@ -195,8 +195,9 @@ class Game extends events.EventEmitter{
                 this.change();
             }
         });
-        client.on("end",()=>{
+        client.on("close",()=>{
             //クライアントがどこかへ行ってしまった！！！！？！？！？！？！？！？！？！？！？！１１１１１１１１１
+            console.log("client is gone");
             if(this.playing===true && this.current==client){
                 //わたしを待っていたので終わらせる
                 this.end(this.opposite,"GONE");
