@@ -18,15 +18,20 @@ class Server{
     }
     //クライアントがきた
     add(c:Client):void{
-        var handler=()=>{
+        c.once("ready",()=>{
             //利用可能なクライアント
             this.clients.push(c);
             if(this.clients.length>=2){
                 //対戦可能
                 this.newSession();
             }
-        };
-        c.once("ready",handler);
+        });
+        c.once("close",()=>{
+            //このひとはいなくなってしまった
+            this.clients=this.clients.filter((obj)=>{
+                return obj!==c;
+            });
+        });
     }
     private newSession():void{
         var cls=this.clients.slice(0,2);
@@ -410,8 +415,7 @@ export class TCPClient extends Client{
         });
         this.socket.on("close",()=>{
             //it is closed
-            this.alive=false;
-            this.emit("close");
+            this.kill();
         });
     }
     send(command:string):void{
