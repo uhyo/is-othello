@@ -6,7 +6,7 @@ FL演習のオセロのあれ用のサーバーです。HTTPで提供される�
 1. `git clone https://github.com/uhyo/is-othello.git`で手元にコードをコピーします。
 2. [node.jsをインストール](http://nodejs.org/)します（`apt-get install nodejs`でも入りますが、なぜか`node`ではなく`nodejs`の名前で入るので自分でシンボリックリンクを貼る必要があります）。
 3. `is-othello`ディレクトリに入り`npm install`します（必要なモジュールがローカルにインストールされます）。
-4. `npm run build`を実行します。
+4. `npm run build`を実行します（Macで`glut default`が落ちる問題が確認されましたが、ファイルディスクリプタの上限数を超えている可能性があるため`ulimit -n 2560`とかやると通りました）。
 
 ## 使い方
 `npm start`でサーバーを起動します。TCPポート8080でHTTP、ポート3000でISOPのサーバーが起動します（デフォルトの場合）。
