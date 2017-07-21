@@ -1,6 +1,6 @@
 {
   "name": "is-othello",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Human interface for the IS FL Othello Protocol.",
   "main": "index.js",
   "scripts": {
