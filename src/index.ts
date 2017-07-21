@@ -1,20 +1,18 @@
-///<reference path="./node.d.ts" />
 import path=require('path');
 import express=require('express');
-import config=require('config');
+const config = require('config');
 
-import st=require('st');
-import ect=require('ect');
-import expressWs=require('express-ws');
+const st = require('st');
+const ect = require('ect');
+const expressWs = require('express-ws');
 
 import client=require('./client');
 import server=require('./server');
 
-export = Index;
 class Index{
-    private app:any;
+    private app: express.Express;
     private clients:client.Manager;
-    private front:server.Front;
+    private front:server.Front | null;
     constructor(){
     }
     public start():void{
@@ -35,7 +33,7 @@ class Index{
 
     }
 
-    private initRoute(app):void{
+    private initRoute(app: express.Express):void{
         //rendering engine
         var views=path.resolve(__dirname,"..","views");
         var ectRenderer=ect({
@@ -56,7 +54,7 @@ class Index{
             res.render("index");
         });
         ////////// ws
-        app.ws("/ws",(ws,req)=>{
+        (app as any).ws("/ws",(ws: any,req: any)=>{
             var cl=this.clients.add(ws);
             if(cl==null){
                 //入らなかった
@@ -68,3 +66,4 @@ class Index{
         });
     }
 }
+export = Index;

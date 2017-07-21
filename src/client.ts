@@ -1,9 +1,8 @@
-///<reference path="./node.d.ts" />
 //Othello clients that handle ws
 
 import net=require('net');
-import config=require('config');
-import byline=require('byline');
+const config = require('config');
+const byline = require('byline');
 
 const enum State{
     INIT = 0,
@@ -17,9 +16,9 @@ export class Manager{
     constructor(){
         this.clients=[];
     }
-    public add(ws):Client{
+    public add(ws: any): Client | null{
         if(this.clients.length<config.get("connections.max")){
-            let result=new Client(ws,(cl)=>{
+            let result=new Client(ws,(cl: any)=>{
                 this.clients=this.clients.filter((o)=>{
                     return o!==cl
                 });
@@ -38,7 +37,7 @@ export class Client{
     private commandQueue:Array<any>;
     private ended:boolean=false;
     private ready:boolean=false;
-    constructor(private ws,private onend){
+    constructor(private ws: any,private onend: any){
         this.state=State.INIT;
         this.commandQueue=[];
         this.initSrv();
@@ -66,11 +65,11 @@ export class Client{
             this.ready=true;
             this.processQueue();
         });
-        this.connect.on("error",(e)=>{
+        this.connect.on("error",(e: any)=>{
             //connected to server
             console.error("e---",e);
         });
-        this.connect.on("close",(err)=>{
+        this.connect.on("close",(err: any)=>{
             //connection end
             //サーバーとの接続がおわった
             this.connect.unref();
@@ -91,10 +90,10 @@ export class Client{
         /*this.ready=true;
         this.processQueue();*/
     }
-    private init(ws):void{
+    private init(ws: any):void{
         //init ws
         console.log("ws init");
-        ws.on('message',(message)=>{
+        ws.on('message',(message: string)=>{
             console.log("ws ",message);
             var obj;
             try{
@@ -126,12 +125,12 @@ export class Client{
         this.onend(this);
     }
     //write to ws client
-    private wssend(obj):void{
+    private wssend(obj: any):void{
         console.log("send",obj);
         this.ws.send(JSON.stringify(obj));
     }
     //write to othello server
-    private write(str):void{
+    private write(str: string):void{
         if(this.connect){
             this.connect.write(str+"\n");
         }
@@ -186,7 +185,7 @@ export class Client{
         }
     }
     //----- process queue
-    private addQueue(obj):void{
+    private addQueue(obj: any):void{
         console.log(obj);
         this.commandQueue.push(obj);
     }

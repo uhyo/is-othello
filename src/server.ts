@@ -1,11 +1,10 @@
-///<reference path="./node.d.ts" />
 //Othello protocol server
 
 import events=require('events');
 import net=require('net');
 
-import byline=require('byline');
-import config=require('config');
+const byline = require('byline');
+const config = require('config');
 
 import board=require('./board');
 
@@ -221,7 +220,7 @@ class Game extends events.EventEmitter{
         this.current_t.start();
     }
     //終わりの判定(winnerが指定されている場合はそちらの勝ち）
-    private end(winner:Client,reason:string):void{
+    private end(winner:Client | null,reason:string):void{
         var {black,white} = this.board.count();
         var turn=this.turn;
         var win= black>white ? "BLACK" : white>black ? "WHITE" : "TIE";

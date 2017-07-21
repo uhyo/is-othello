@@ -9,13 +9,12 @@ var typescript=require('gulp-typescript');
 var del=require('del');
 var sass=require('gulp-sass');
 
+const tsproj = typescript.createProject('tsconfig.json', {
+    typescript: require('typescript'),
+});
 gulp.task('tsc',function(){
     return gulp.src("src/**/*.ts")
-    .pipe(typescript({
-        module:"commonjs",
-        target:"es5",
-        typescript:require('typescript')
-    }))
+    .pipe(tsproj())
     .js
     .pipe(gulp.dest("js/"));
 });

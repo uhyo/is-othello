@@ -9,7 +9,7 @@ export class Board{
     }
     init():void{
         //盤を初期化
-        var d=this.data=[];
+        var d: Array<Array<string>>=this.data=[];
         for(var y=0;y<8;y++){
             if(y===3){
                 d[y]=["","","","WHITE","BLACK","","",""];
@@ -142,7 +142,7 @@ export class Board{
             return turn;
         }
     }
-    private isOut({x,y}):boolean{
+    private isOut({x,y}: {x: number; y: number}):boolean{
         return x<0 || 7<x || y<0 || 7<y;
     }
 }
