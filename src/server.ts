@@ -178,6 +178,8 @@ class Game extends events.EventEmitter{
                         this.end(null,"DOUBLE_PASS");
                         return;
                     }
+                }else{
+                    this.pass_count = 0;
                 }
                 //OK!!!!!!!
                 //ackする
