@@ -223,6 +223,7 @@ class Game extends events.EventEmitter{
     }
     //終わりの判定(winnerが指定されている場合はそちらの勝ち）
     private end(winner:Client | null,reason:string):void{
+        this.playing = false;
         var {black,white} = this.board.count();
         var turn=this.turn;
         var win= black>white ? "BLACK" : white>black ? "WHITE" : "TIE";

@@ -54,6 +54,7 @@ module.exports = React.createClass({
     },
     closed:function(){
         return <div className="playing-app">
+            {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={false} unmovable={false}/> : null}
             <p>終了しました。再度オセロをするにはページを更新してください。</p>
             <Log log={this.state.client.log} />
         </div>;
