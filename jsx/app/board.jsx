@@ -3,6 +3,7 @@ var Reflux=require('reflux');
 var classnames=require('classnames');
 
 var clientActions=require('../../actions/client');
+var boardStore=require('../../stores/board');
 
 module.exports = React.createClass({
     displayName:"Board",
@@ -39,8 +40,8 @@ module.exports = React.createClass({
         var t=e.target, x=parseInt(t.dataset.posx), y=parseInt(t.dataset.posy);
         if(isFinite(x) && isFinite(y)){
             //click event
-            if(this.props.board[y][x]!==""){
-                //救済
+            if (!boardStore.isMovableAt(this.props.turn, this.props.board, x, y)){
+                // ここは置けない
                 return;
             }
             clientActions.move(this.props.ws,{x,y});

@@ -133,39 +133,49 @@ function move(turn,{x,y},board){
 function isMovable(turn,board){
     //turnさんがboardに置く所があるか判定
     var directions=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
-    var o=opposite(turn);
-    var state;
     for(var x=0;x<8;x++){
         for(var y=0;y<8;y++){
             if(board[y][x]!==""){
                 //おけない
                 continue;
             }
-            //ここに置けるか判定
-            for(var k=0;k<8;k++){
-                var [dx,dy]=directions[k];
-                var cx=x, cy=y;
-                //おいたらこの方向でとれるか判定
-                var f2=false;
-                while(1){
-                    cx+=dx, cy+=dy;
-                    if(isOut(cx,cy)){
-                        //むりだった
-                        break;
-                    }
-                    if(board[cy][cx]===turn && f2===true){
-                        //OK
-                        return true;
-                    }else if(board[cy][cx]===o){
-                        //いけそう
-                        f2=true;
-                    }else{
-                        //むりだった
-                        break;
-                    }
-                }
+            if (isMovableAt(turn, board, x, y)){
+                return true;
             }
         }
     }
     return false;
 }
+
+// ここに石を置けるか
+function isMovableAt(turn, board, x, y){
+    var directions=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+    var o=opposite(turn);
+    //ここに置けるか判定
+    for(var k=0;k<8;k++){
+        var [dx,dy]=directions[k];
+        var cx=x, cy=y;
+        //おいたらこの方向でとれるか判定
+        var f2=false;
+        while(1){
+            cx+=dx, cy+=dy;
+            if(isOut(cx,cy)){
+                //むりだった
+                break;
+            }
+            if(board[cy][cx]===turn && f2===true){
+                //OK
+                return true;
+            }else if(board[cy][cx]===o){
+                //いけそう
+                f2=true;
+            }else{
+                //むりだった
+                break;
+            }
+        }
+    }
+    return false;
+}
+// export!!!!! (ad-hoc)
+board.isMovableAt = isMovableAt;

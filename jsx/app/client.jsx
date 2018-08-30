@@ -48,13 +48,13 @@ module.exports = React.createClass({
     playing:function(){
         return <div className="playing-app">
             <PlayInfo opponent={this.state.client.opponent} mycolor={this.state.board.mycolor} turn={this.state.board.turn} time={this.state.client.time} />
-            {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={this.state.board.turn===this.state.board.mycolor} unmovable={this.state.board.unmovable}/> : null}
+            {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turn={this.state.board.turn} turnPlayer={this.state.board.turn===this.state.board.mycolor} unmovable={this.state.board.unmovable}/> : null}
             <Log log={this.state.client.log} />
         </div>;
     },
     closed:function(){
         return <div className="playing-app">
-            {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turnPlayer={false} unmovable={false}/> : null}
+            {this.state.board.board ? <Board ws={this.props.ws} board={this.state.board.board} turn={this.state.board.turn} turnPlayer={false} unmovable={false}/> : null}
             <p>終了しました。再度オセロをするにはページを更新してください。</p>
             <Log log={this.state.client.log} />
         </div>;
