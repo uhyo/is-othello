@@ -2,9 +2,7 @@ var path=require('path');
 var gulp=require('gulp');
 var browserify=require('browserify');
 var source=require('vinyl-source-stream');
-var reactify=require('reactify');
 var babelify=require('babelify');
-var globule=require('globule');
 var typescript=require('gulp-typescript');
 var del=require('del');
 var sass=require('gulp-sass');
@@ -21,7 +19,9 @@ gulp.task('tsc',function(){
 gulp.task('jsx',function(){
     return browserify({
         entries:[path.join(__dirname,"jsx/entrypoint.jsx")],
-        transform:[babelify,reactify],
+        transform:[babelify.configure({
+            presets: ['@babel/preset-react'],
+        })],
         extensions:['.js','.jsx'],
         basedir:__dirname
     })
