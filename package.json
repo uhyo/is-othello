@@ -35,6 +35,6 @@
     "@types/node": "^8.0.14",
     "babelify": "^9.0.0",
     "browserify": "^16.2.2",
-    "gulp-sass": "^4.0.1"
+    "gulp-sass": "^4.0.2"
   }
 }
