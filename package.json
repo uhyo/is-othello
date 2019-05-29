@@ -21,7 +21,7 @@
     "express-ws": "^4.0.0",
     "gulp": "^3.9.0",
     "gulp-typescript": "^3.2.1",
-    "js-yaml": "^3.3.1",
+    "js-yaml": "^3.13.1",
     "react": "^0.13.3",
     "reflux": "^0.2.13",
     "st": "^1.2.2",
