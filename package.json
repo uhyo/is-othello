@@ -19,7 +19,7 @@
     "ect": "^0.5.9",
     "express": "^4.16.3",
     "express-ws": "^4.0.0",
-    "gulp": "^3.9.0",
+    "gulp": "^4.0.2",
     "gulp-typescript": "^3.2.1",
     "js-yaml": "^3.13.1",
     "react": "^0.13.3",
