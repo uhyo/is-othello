@@ -17,7 +17,7 @@
     "config": "^1.14.0",
     "del": "^1.2.1",
     "ect": "^0.5.9",
-    "express": "^4.16.3",
+    "express": "^4.18.2",
     "express-ws": "^4.0.0",
     "gulp": "^3.9.0",
     "gulp-typescript": "^3.2.1",
